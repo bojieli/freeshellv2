@@ -1,0 +1,13 @@
+#
+# reserved values
+#
+255	local
+254	main
+253	default
+0	unspec
+1001 FSBR
+1002 ETH0
+#
+# local
+#
+#1	inr.ruhep

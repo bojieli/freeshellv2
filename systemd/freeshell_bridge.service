@@ -1,0 +1,28 @@
+[Unit]
+Description=Freeshell Bridge over GRE
+Requires=network-online.target NetworkManager.service
+After=network-online.target NetworkManager.service
+Before=ceph.target unmaprbd.service vz.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Environment="LOCAL=114.214.197.1" "BRIP=172.16.0.1/24" "BRGW=172.16.0.254" "BRIP6=2001:da8:d800:701:8000::1/64" "BRGW6=2001:da8:d800:701::1" "REMOTE=202.141.160.95" "IFNAME=enp5s0f1"
+ExecStart=/usr/sbin/ip link add fsgre type gretap remote ${REMOTE} local ${LOCAL} ttl 32
+ExecStart=/usr/sbin/ip link set fsgre up
+ExecStart=/usr/sbin/brctl addbr fsbr
+ExecStart=/usr/sbin/brctl addif fsbr fsgre $IFNAME
+ExecStart=/usr/sbin/brctl stp fsbr off
+ExecStart=/usr/sbin/ip link set fsbr up
+ExecStart=/usr/sbin/ip addr add ${BRIP} dev fsbr
+ExecStart=/usr/sbin/ip -6 addr add ${BRIP6} dev fsbr
+ExecStart=/usr/sbin/ip route add default via ${BRGW} dev fsbr
+ExecStart=/usr/sbin/ip route add default via 172.16.0.254 dev fsbr table FSBR
+#ExecStart=/usr/sbin/ip -6 route add default via ${BRGW6} dev fsbr
+ExecStop=/usr/sbin/ip link set fsbr down
+ExecStop=/usr/sbin/ip link set fsgre down
+ExecStop=/usr/sbin/brctl delbr fsbr
+ExecStop=/usr/sbin/ip link del fsgre
+
+[Install]
+WantedBy=multi-user.target
