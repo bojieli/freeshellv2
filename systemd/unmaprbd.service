@@ -1,0 +1,16 @@
+[Unit]
+Description=Unmap RBD images when poweroff
+DefaultDependencies=false
+Conflicts=shutdown.target
+After=shutdown.target network.target NetworkManager.service ceph.target
+Wants=network.target NetworkManager.service ceph.target
+Before=vz.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+ExecStop=/usr/bin/unmaprbd
+
+[Install]
+WantedBy=multi-user.target

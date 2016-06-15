@@ -1,0 +1,15 @@
+[Unit]
+Description=Virtuozzo Container service
+DefaultDependencies=false
+Conflicts=shutdown.target
+After=vcmmd.service shutdown.target unmaprbd.service local-fs.target ceph.target
+Wants=vcmmd.service unmaprbd.service local-fs.target ceph.target
+
+[Service]
+ExecStart=/usr/libexec/vz start
+ExecStop=/usr/libexec/vz stop
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

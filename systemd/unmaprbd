@@ -1,0 +1,19 @@
+#!/bin/bash
+declare -a image
+/bin/rbd showmapped | sed -n '2,$ p' | while read -a image; do
+	if grep ${image[4]} /proc/mounts; then
+		echo "umounting [${image[4]}]"
+		if umount ${image[4]}; then
+			echo "      ...umounted"
+		else
+			echo " ...umount failed"
+		fi
+	fi
+
+	echo "umapping [${image[1]}] in [${image[2]}]"
+	if /bin/rbd unmap ${image[4]}; then
+		echo "         unmapped"
+	else
+		echo "  ...unmap failed"
+	fi
+done
