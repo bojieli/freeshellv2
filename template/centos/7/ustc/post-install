@@ -39,7 +39,7 @@ rm -f etc/systemd/system/default.target > /dev/null 2>&1
 ln -s multi-user.target etc/systemd/system/default.target > /dev/null 2>&1
 
 # turn services on
-list="network httpd iptables sshd xinetd saslauthd sendmail crond"
+list="network iptables sshd saslauthd crond"
 for i in $list; do
 	/bin/systemctl enable $i.service > /dev/null 2>&1
 done
@@ -67,6 +67,25 @@ if [ -f $CFG_FILE ]; then
         $CFG_FILE > ${CFG_FILE}.$$ && \
 		move_file ${CFG_FILE}.$$ $CFG_FILE > /dev/null 2>&1
 fi
+
+mkdir -p etc/httpd/conf.d
+# apache tuning
+echo "# prefork MPM
+# StartServers: number of server processes to start
+# MinSpareServers: minimum number of server processes which are kept spare
+# MaxSpareServers: maximum number of server processes which are kept spare
+# ServerLimit: maximum value for MaxClients for the lifetime of the server
+# MaxClients: maximum number of server processes allowed to start
+# MaxRequestsPerChild: maximum number of requests a server process serves
+<IfModule prefork.c>
+StartServers       1
+MinSpareServers    1
+MaxSpareServers    5
+ServerLimit       10
+MaxClients        10
+MaxRequestsPerChild  4000
+</IfModule>
+" > etc/httpd/conf.d/mpm_prefork.conf
 
 # saslauthd tuning
 CFG_FILE=etc/sysconfig/saslauthd
@@ -114,39 +133,9 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 " > etc/yum.repos.d/CentOS-Base.repo
 
-# Add epel
-echo "[epel]
-name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=http://mirrors.ustc.edu.cn/epel/7/$basearch
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch
-failovermethod=priority
-enabled=1
-gpgcheck=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-
-[epel-debuginfo]
-name=Extra Packages for Enterprise Linux 7 - $basearch - Debug
-baseurl=http://mirrors.ustc.edu.cn/epel/7/$basearch/debug
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-6&arch=$basearch
-failovermethod=priority
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-gpgcheck=0
-
-[epel-source]
-name=Extra Packages for Enterprise Linux 7 - $basearch - Source
-baseurl=http://mirrors.ustc.edu.cn/epel/7/SRPMS
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-source-6&arch=$basearch
-failovermethod=priority
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-gpgcheck=0
-" > etc/yum.repos.d/epel.repo
-
 # Change default locale to UTF-8
-sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' etc/locale.gen
-chroot . /usr/sbin/locale-gen --purge en_US.UTF-8
-echo -e 'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n' > etc/default/locale   
+echo "Change default locale to UTF-8"
+echo -e 'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n' > etc/environment
 
 # Disable fastestmirror
 sed -i -r 's/enabled=1/enabled=0/' etc/yum/pluginconf.d/fatestmirror.conf
