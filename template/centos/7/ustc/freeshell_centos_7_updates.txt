@@ -1,0 +1,1 @@
+http://mirrors.ustc.edu.cn/centos/7/updates/x86_64/

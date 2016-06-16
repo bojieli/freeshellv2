@@ -1,0 +1,1 @@
+http://mirrors.ustc.edu.cn/centos/7/os/x86_64/
