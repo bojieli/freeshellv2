@@ -1,0 +1,6 @@
+$SW_SERVER/download/mirrors/centos-7
+$SW_SERVER/download/mirrors/updates-released-ce7
+#http://mirrors.ustc.edu.cn/centos/7/os/x86_64/
+#http://mirrors.ustc.edu.cn/centos/7/updates/x86_64/
+http://mirrors.ustc.edu.cn/~alkaid/freeshell_centos_7.txt
+http://mirrors.ustc.edu.cn/~alkaid/freeshell_centos_7_updates.txt
