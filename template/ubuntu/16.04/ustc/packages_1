@@ -1,0 +1,35 @@
+libprocps4 procps
+insserv
+net-tools
+init-system-helpers
+sysv-rc
+sysvinit-utils
+tzdata
+libklibc klibc-utils
+libgdbm3 libperl5.22 perl-modules-5.22 perl
+libkmod2 kmod module-init-tools
+udev
+libudev1 initramfs-tools-bin busybox-initramfs initramfs-tools initramfs-tools-core linux-base
+libpng12-0 libpciaccess0 libdrm-intel1 libdrm-radeon1 libdrm2 libplymouth4 plymouth
+mountall
+libjson-c2
+initscripts
+libapparmor1 dmsetup libdevmapper1.02.1 libcryptsetup4 libcap2-bin libseccomp2 systemd systemd-sysv
+libdebconfclient0 base-passwd
+adduser
+cpio
+diffutils
+libasprintf0v5 gettext-base
+grep
+gzip
+hostname
+libmnl0
+iproute2 ifupdown
+makedev
+libmount1 libsmartcols1 mount
+ncurses-base
+netbase
+readline-common
+tar
+ucf
+libfdisk1 util-linux

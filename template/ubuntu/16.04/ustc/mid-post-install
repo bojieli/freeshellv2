@@ -1,0 +1,9 @@
+#!/bin/bash
+
+/sbin/ifconfig lo up
+while [ ! -d /run/systemd/system ]; do
+	sleep 1
+done
+rm -rf /run/systemd/system
+
+exit 0

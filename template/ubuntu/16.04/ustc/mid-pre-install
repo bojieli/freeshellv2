@@ -1,0 +1,10 @@
+#!/bin/bash
+
+touch /etc/network/interfaces
+
+rm -rf /var/run > /dev/null 2>&1
+ln -s /run /var/run > /dev/null 2>&1
+rm -rf /run > /dev/null 2>&1
+mkdir /run > /dev/null 2>&1
+
+exit 0
