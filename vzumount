@@ -1,0 +1,18 @@
+#!/bin/bash
+#usage vzumount $CTID
+set -e
+if [ -z $1 ]; then
+	echo "no CTID"
+	exit 1
+fi
+
+CTID=$1
+POOL=rbd
+POOL_PATH=/mnt/freeshell/pool
+if mountpoint /mnt/freeshell/${CTID}; then
+	umount /mnt/freeshell/${CTID}
+#	rbd unmap /dev/rbd/$POOL/shell-${CTID}
+else
+	echo failed
+fi
+exit 0
