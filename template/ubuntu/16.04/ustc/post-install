@@ -273,7 +273,7 @@ EOL
 echo "deb http://mirrors.ustc.edu.cn/ubuntu trusty main restricted universe multiverse
 deb http://mirrors.ustc.edu.cn/ubuntu trusty-updates main restricted universe multiverse
 deb http://mirrors.ustc.edu.cn/ubuntu trusty-security main restricted universe multiverse
-" > etc/apt/sourses.list
+" > etc/apt/sources.list
 
 # Change default locale to UTF-8
 sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' etc/locale.gen
