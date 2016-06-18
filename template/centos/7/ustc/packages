@@ -66,3 +66,5 @@ git
 lftp
 bash-completion
 strace
+aria2
+tmux

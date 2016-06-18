@@ -69,3 +69,5 @@ lftp
 curl
 strace
 bash-completion
+aria2
+tmux
