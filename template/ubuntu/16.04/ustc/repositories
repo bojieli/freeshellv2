@@ -1,4 +1,4 @@
 $UBU_SERVER/ubuntu xenial main restricted universe multiverse
 $UBU_SERVER/ubuntu xenial-updates main restricted universe multiverse
-http://security.ubuntu.com/ubuntu xenial-security main restricted universe multiverse
+$UBU_SERVER/ubuntu xenial-security main restricted universe multiverse
 http://archive.canonical.com/ubuntu xenial partner
