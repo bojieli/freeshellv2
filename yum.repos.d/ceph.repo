@@ -1,0 +1,16 @@
+[ceph]
+name=Ceph RPM repo
+baseurl=http://mirrors.ustc.edu.cn/ceph/rpm-hammer/el7/x86_64/
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch
+failovermethod=priority
+enabled=1
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+[ceph-noarch]
+name=Ceph RPM repo
+baseurl=http://mirrors.ustc.edu.cn/ceph/rpm-hammer/el7/noarch/
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch
+failovermethod=priority
+enabled=1
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
