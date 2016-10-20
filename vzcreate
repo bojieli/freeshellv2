@@ -22,23 +22,23 @@ else
 fi
 
 POOL=rbd
-POOL_PATH=/mnt/freeshell/pool
-SIZE=10240
+SIZE=13312
 CONF=freeshell
 if rbd status shell-${CTID} 2&>/dev/null; then
 	echo shell existed ... quit
 	exit 1
 else
 	rbd create -p ${POOL} --size ${SIZE} shell-${CTID}
-	mkfs.ext4 ${POOL_PATH}/shell-${CTID} 
+	rbd map shell-${CTID}
+	mkfs.ext4 /dev/rbd/$POOL/shell-${CTID} 
 	./vzmount $CTID
 	ROOTPASSWD=$(openssl rand -base64 12)
+	echo ${ROOTPASSWD}
 	vzctl create ${CTID} --ostemplate $OSTEMPLATE --config ${CONF} --private /mnt/freeshell/${CTID}/${CTID}
 	vzctl set ${CTID} --ipadd 10.70.$((${CTID}/256)).$((${CTID}%256)) --save
 	vzctl set ${CTID} --nameserver 202.38.64.1 --save
 	vzctl set ${CTID} --hostname $HOSTNAME --save
 	vzctl set ${CTID} --userpasswd root:${ROOTPASSWD}
-	echo ${ROOTPASSWD}
 	./vzumount ${CTID}
 fi
 exit 0

@@ -8,23 +8,22 @@ fi
 
 CTID=$1
 POOL=rbd
-POOL_PATH=/mnt/freeshell/pool
 STATUS=$(rbd status shell-${CTID})
-#if [ "${STATUS}" = "Watchers: none" ]; then
-#	rbd map shell-${CTID}
-#else
-#	if [ -h /dev/rbd/${POOL}/shell-${CTID} ]; then
-#		echo has been mapped
-#	else
-#		echo being used by others ... quit
-#		exit 1
-#	fi
-#fi
+if [ "${STATUS}" = "Watchers: none" ]; then
+	rbd map shell-${CTID}
+else
+	if [ -h /dev/rbd/${POOL}/shell-${CTID} ]; then
+		echo has been mapped
+	else
+		echo being used by others ... quit
+		exit 1
+	fi
+fi
 
-e2fsck -y ${POOL_PATH}/shell-${CTID}
+e2fsck -y /dev/rbd/${POOL}/shell-${CTID}
 
 [ -d /mnt/freeshell/${CTID} ] || mkdir /mnt/freeshell/${CTID}
-if mount ${POOL_PATH}/shell-${CTID} /mnt/freeshell/${CTID}/; then
+if mount /dev/rbd/$POOL/shell-${CTID} /mnt/freeshell/${CTID}/; then
 	echo mounted
 else
 	echo mount error

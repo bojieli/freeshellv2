@@ -8,10 +8,10 @@ fi
 
 CTID=$1
 POOL=rbd
-POOL_PATH=/mnt/freeshell/pool
-if mountpoint /mnt/freeshell/${CTID}; then
-	umount /mnt/freeshell/${CTID}
-#	rbd unmap /dev/rbd/$POOL/shell-${CTID}
+
+if [ -h /dev/rbd/$POOL/shell-${CTID} ]; then
+	umount /dev/rbd/$POOL/shell-${CTID}
+	rbd unmap /dev/rbd/$POOL/shell-${CTID}
 else
 	echo failed
 fi
