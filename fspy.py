@@ -111,7 +111,11 @@ class VM(object):
                 if os.path.ismount(self.rbd_mountpoint):
                     logger.info('%s is already a mountpoint' % self.rbd_mountpoint)
                 else:
-                    self.mount_rbd_image()
+                    try:
+                        self.mount_rbd_image()
+                    except:
+                        silentremove(self.lock_path_s1)
+                        raise
             else:
                 logger.critical('rbd image of %d is busy' % self.id)
                 logger.critical(status)
@@ -124,17 +128,21 @@ class VM(object):
             return
         if os.path.exists(self.image_path):
             touch(self.lock_path_s2)
-            check_ext4_fs(self.image_path)
-            os.makedirs(self.image_mountpoint, exist_ok=True)
-            if os.path.ismount(self.image_mountpoint):
-                logger.info('%s is already a mountpoint' % self.image_mountpoint)
-            else:
-                self.mount_image()
-            if not os.path.exists(self.vm_config_path):
-                if os.path.exists(self.vm_config_realpath):
-                    os.symlink(self.vm_config_realpath, self.vm_config_path)
+            try:
+                check_ext4_fs(self.image_path)
+                os.makedirs(self.image_mountpoint, exist_ok=True)
+                if os.path.ismount(self.image_mountpoint):
+                    logger.info('%s is already a mountpoint' % self.image_mountpoint)
                 else:
-                    logger.warning('cannot locate vm config of %d' % self.id)
+                    self.mount_image()
+                if not os.path.exists(self.vm_config_path):
+                    if os.path.exists(self.vm_config_realpath):
+                        os.symlink(self.vm_config_realpath, self.vm_config_path)
+                    else:
+                        logger.warning('cannot locate vm config of %d' % self.id)
+            except:
+                silentremove(self.lock_path_s2)
+                raise
         else:
             logger.critical('rbd image of %d not found in mount_stage_2' % self.id)
             raise RuntimeError()
@@ -176,15 +184,17 @@ class VM(object):
             self.mount_stage_1()
             make_ext4_fs(self.image_path)
             self.mount_stage_2()
-            subprocess.check_call(['vzctl', 'create', str(self.id),
-                             '--ostemplate', template,
-                             '--config', config,
-                             '--private', self.vm_private_path])
-            if attrs is not None:
-                logger.debug('attrs is :')
-                self.vm_set_attrs(attrs)
-            self.umount_stage_2()
-            self.umount_stage_1()
+            try:
+                subprocess.check_call(['vzctl', 'create', str(self.id),
+                                 '--ostemplate', template,
+                                 '--config', config,
+                                 '--private', self.vm_private_path])
+                if attrs is not None:
+                    logger.debug('attrs is :')
+                    self.vm_set_attrs(attrs)
+            finally:
+                self.umount_stage_2()
+                self.umount_stage_1()
         else:
             logger.critical('rbd image %s has already existed' % self.rbd_name)
             raise NotImplementedError()
@@ -205,7 +215,13 @@ class VM(object):
         else:
             logger.debug('found stage_2 lock, skip mount_stage_2')
         if os.path.exists(self.vm_config_path):
-            subprocess.check_call(['vzctl', 'start', str(self.id)])
+            try:
+                subprocess.check_call(['vzctl', 'start', str(self.id)])
+            except:
+                logger.critical('Error when starting vm %d, umount it' % self.id)
+                self.umount_stage_2()
+                self.umount_stage_1()
+                raise
         else:
             logger.critical('can\'t start vm %d withoud a valid config' % self.id)
 
@@ -241,32 +257,32 @@ def parse_arg():
     subparsers = parser.add_subparsers(help='sub command', dest='cmd')
 
     # list
-    parser_list = subparsers.add_parser('list', aliases=['ls'])
+    parser_list = subparsers.add_parser('list')
     parser_list.add_argument('-a', '--all', action='store_true')
 
     # create
-    parser_create = subparsers.add_parser('create', aliases=['c'])
+    parser_create = subparsers.add_parser('create')
     parser_create.add_argument('--config', type=str, default='freeshell')
     parser_create.add_argument('-H', '--hostname', type=str, help='vm hostname, default is vz-${CTID}')
     parser_create.add_argument('id', type=int, help='CTID')
     parser_create.add_argument('template', type=str)
 
     # mount
-    parser_mount = subparsers.add_parser('mount', aliases=['m'])
+    parser_mount = subparsers.add_parser('mount')
     parser_mount.add_argument('id', type=int, help='CTID')
     parser_mount.add_argument('-s', dest='stage', type=int, choices=[1, 2], help='specify a mount stage')
 
     # umount
-    parser_umount = subparsers.add_parser('umount', aliases=['u'])
+    parser_umount = subparsers.add_parser('umount')
     parser_umount.add_argument('id', type=int, help='CTID')
     parser_umount.add_argument('-s', dest='stage', type=int, choices=[1, 2], help='specify a umount stage')
 
     # start
-    parser_start = subparsers.add_parser('start', aliases=['s'])
+    parser_start = subparsers.add_parser('start')
     parser_start.add_argument('id', type=int, help='CTID')
 
     # destroy
-    parser_destroy = subparsers.add_parser('destroy', aliases=['d'])
+    parser_destroy = subparsers.add_parser('destroy')
     parser_destroy.add_argument('id', type=int, help='CTID')
     return parser.parse_args()
 
@@ -317,7 +333,7 @@ def main():
             args.hostname = 'vz-' + str(args.id)
         root_password = get_random_password()
         attrs = {
-            '--ipadd': '10.70.%d.%d' %(args.id // 256, args.id % 256),
+            '--ipadd': '10.70.%d.%d' % (args.id // 256, args.id % 256),
             '--nameserver': '202.38.64.17',
             '--hostname': args.hostname,
             '--userpasswd': 'root:' + root_password
