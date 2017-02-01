@@ -63,7 +63,7 @@ class VM(object):
         self.image_mountpoint = basedir + '/' + str(vmid)
         self.vm_private_path = self.image_mountpoint + '/' + str(vmid)
         self.vm_config_path = '/etc/vz/conf/' + str(vmid) + '.conf'
-        self.vm_config_realpath = self.image_mountpoint + '/ve.conf'
+        self.vm_config_realpath = self.image_mountpoint + '/' + str(self.id) + '/ve.conf'
 
     def get_rbd_status(self):
         try:
@@ -114,6 +114,7 @@ class VM(object):
                     self.mount_rbd_image()
             else:
                 logger.critical('rbd image of %d is busy' % self.id)
+                logger.critical(status)
                 raise RuntimeError()
 
     def mount_stage_2(self):
@@ -219,6 +220,7 @@ class VM(object):
                 subprocess.check_call(['rbd', 'rm', self.rbd_name])
             else:
                 logger.critical('rbd image %d is umounted but still busy while destroying' % self.id)
+                logger.critical(status)
                 raise RuntimeError()
 
 
