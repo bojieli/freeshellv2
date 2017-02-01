@@ -48,13 +48,12 @@ def create_rbd_image(image_name, size=13312, pool='rbd'):
 
 
 class VM(object):
-
     def __init__(self, vmid, basedir='/mnt/freeshell', lock_basedir='/dev/shm'):
 
         self.id = vmid
         self.basedir = basedir
         self.lock_basedir = lock_basedir
-        self.rbd_name = 'shell-'+str(vmid)
+        self.rbd_name = 'shell-' + str(vmid)
         self.lock_path = lock_basedir + '/.shell-' + str(vmid) + '.lock'
         self.lock_path_s1 = self.lock_path + '.s1'
         self.lock_path_s2 = self.lock_path + '.s2'
@@ -186,9 +185,9 @@ class VM(object):
             self.mount_stage_2()
             try:
                 subprocess.check_call(['vzctl', 'create', str(self.id),
-                                 '--ostemplate', template,
-                                 '--config', config,
-                                 '--private', self.vm_private_path])
+                                       '--ostemplate', template,
+                                       '--config', config,
+                                       '--private', self.vm_private_path])
                 if attrs is not None:
                     logger.debug('attrs is :')
                     self.vm_set_attrs(attrs)
@@ -351,6 +350,7 @@ def main():
     else:
         logger.critical('unknown command %s' % args.cmd)
         raise NotImplementedError()
+
 
 if __name__ == '__main__':
     main()
