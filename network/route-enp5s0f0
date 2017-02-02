@@ -1,7 +1,10 @@
 default via 114.214.197.254 dev enp5s0f0 table 1000
-default via 114.214.197.254 dev enp5s0f0 table ETH0
-
 114.214.197.0/24 dev enp5s0f0 table 1000
+10.70.0.0/16 dev venet0 table 1000
+
+default via 114.214.197.254 dev enp5s0f0 table ETH0
+114.214.197.0/24 dev enp5s0f0 table ETH0
+10.70.0.0/16 dev venet0 table ETH0
 
 202.38.64.0/19 via 114.214.197.254 dev enp5s0f0
 210.45.64.0/20 via 114.214.197.254 dev enp5s0f0
@@ -16,5 +19,3 @@ default via 114.214.197.254 dev enp5s0f0 table ETH0
 202.141.160.0/20 via 114.214.197.254 dev enp5s0f0
 202.141.176.0/20 via 114.214.197.254 dev enp5s0f0
 172.16.0.0/16 via 114.214.197.254 dev enp5s0f0
-
-10.70.0.0/16 dev venet0 table 1000
