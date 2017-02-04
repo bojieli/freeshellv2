@@ -7,7 +7,7 @@ Before=ceph.target unmaprbd.service vz.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
-Environment="LOCAL=114.214.197.1" "BRIP=172.16.0.1/24" "BRGW=172.16.0.254" "BRIP6=2001:da8:d800:701:8000::1/64" "BRGW6=2001:da8:d800:701::1" "REMOTE=202.141.160.95" "IFNAME=enp5s0f1"
+Environment="LOCAL=114.214.197.${HOSTID}" "BRIP=172.16.0.${HOSTID}/24" "BRGW=172.16.0.254" "BRIP6=2001:da8:d800:701:8000::${HOSTID}/64" "BRGW6=2001:da8:d800:701::1" "REMOTE=202.141.160.95" "IFNAME=enp5s0f1"
 ExecStart=/usr/sbin/ip link add fsgre type gretap remote ${REMOTE} local ${LOCAL} ttl 32
 ExecStart=/usr/sbin/ip link set fsgre up
 ExecStart=/usr/sbin/brctl addbr fsbr
@@ -21,6 +21,7 @@ ExecStart=/usr/sbin/ip route add default via 172.16.0.254 dev fsbr table FSBR
 ExecStart=/usr/sbin/ip route add 172.16.0.0/24 dev fsbr table FSBR
 ExecStart=/usr/sbin/ip route add 10.70.0.0/16 dev venet0 table FSBR
 #ExecStart=/usr/sbin/ip -6 route add default via ${BRGW6} dev fsbr
+ExecStop=/usr/sbin/ip route del 10.70.0.0/16 dev venet0 table FSBR
 ExecStop=/usr/sbin/ip link set fsbr down
 ExecStop=/usr/sbin/ip link set fsgre down
 ExecStop=/usr/sbin/brctl delbr fsbr
