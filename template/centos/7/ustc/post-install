@@ -100,7 +100,7 @@ rm -rf run/* > /dev/null 2>&1
 touch etc/sysconfig/network
 
 # Change default repository to ustc
-echo "[base]
+echo '[base]
 name=CentOS-$releasever - Base
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
 baseurl=http://mirrors.ustc.edu.cn/centos/$releasever/os/$basearch/
@@ -131,7 +131,7 @@ mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-" > etc/yum.repos.d/CentOS-Base.repo
+' > etc/yum.repos.d/CentOS-Base.repo
 
 # Change default locale to UTF-8
 echo "Change default locale to UTF-8"
