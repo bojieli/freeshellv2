@@ -1,7 +1,9 @@
 $old password + "ipmi"
 host		ip				mac
-scgyshell-1	114.214.197.11	00:15:17:83:f3:56
-scgyshell-2	114.214.196.72	00:15:17:83:b0:26
-scgyshell-3	202.38.70.149	00:15:17:83:b0:72	
-scgyshell-4	114.214.197.69	00:15:17:65:03:0a
-ipmitool -I lan -U admin -H 114.214.197.11 power status
+scgyshell-1	10.70.70.1	00:15:17:83:f3:56
+scgyshell-2	10.70.70.2	00:15:17:83:b0:26
+scgyshell-3	10.70.70.3	00:15:17:83:b0:72	
+scgyshell-4	10.70.70.4	00:15:17:65:03:0a
+ipmitool -I lan -U admin -H 10.70.70.1 power status
+netmask is 255.255.0.0
+defgw ip 10.70.0.1, mac F0:25:72:A8:FE:41
