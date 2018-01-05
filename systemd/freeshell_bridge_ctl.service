@@ -16,16 +16,16 @@ ExecStart=/sbin/ip link set gres2 up
 ExecStart=/sbin/ip link add gres3 type gretap remote 202.38.70.247 local 202.141.160.95 ttl 255
 ExecStart=/sbin/ip link set gres3 up
 
-ExecStart=/sbin/ip link add gres4 type gretap remote 202.38.70.248 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link add gres4 type gretap remote 202.38.70.249 local 202.141.160.95 ttl 255
 ExecStart=/sbin/ip link set gres4 up
 
-ExecStart=/sbin/ip link add gres5 type gretap remote 202.38.70.249 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link add gres5 type gretap remote 202.38.70.250 local 202.141.160.95 ttl 255
 ExecStart=/sbin/ip link set gres5 up
 
-ExecStart=/sbin/ip link add gres6 type gretap remote 202.38.70.250 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link add gres6 type gretap remote 202.38.70.251 local 202.141.160.95 ttl 255
 ExecStart=/sbin/ip link set gres6 up
 
-ExecStart=/sbin/ip link add gres7 type gretap remote 202.38.70.251 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link add gres7 type gretap remote 202.38.70.252 local 202.141.160.95 ttl 255
 ExecStart=/sbin/ip link set gres7 up
 
 ExecStart=/sbin/brctl addbr fsctl
