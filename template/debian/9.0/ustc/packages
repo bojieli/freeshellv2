@@ -35,11 +35,9 @@ mime-support
 mlocate
 mtools
 ncurses-term
-openssh-blacklist
 openssh-client
 openssh-server
 openssl
-openssl-blacklist
 patch
 psutils
 python3
