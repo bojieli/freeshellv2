@@ -1,0 +1,56 @@
+[Unit]
+Description=Freeshell Control Pannel Bridge
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+
+ExecStart=/sbin/ip link add gres1 type gretap remote 202.38.70.245 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres1 up
+
+ExecStart=/sbin/ip link add gres2 type gretap remote 202.38.70.246 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres2 up
+
+ExecStart=/sbin/ip link add gres3 type gretap remote 202.38.70.247 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres3 up
+
+ExecStart=/sbin/ip link add gres4 type gretap remote 202.38.70.248 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres4 up
+
+ExecStart=/sbin/ip link add gres5 type gretap remote 202.38.70.249 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres5 up
+
+ExecStart=/sbin/ip link add gres6 type gretap remote 202.38.70.250 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres6 up
+
+ExecStart=/sbin/ip link add gres7 type gretap remote 202.38.70.251 local 202.141.160.95 ttl 255
+ExecStart=/sbin/ip link set gres7 up
+
+ExecStart=/sbin/brctl addbr fsctl
+ExecStart=/sbin/brctl addif fsctl gres1 gres2 gres3 gres4 gres5 gres6 gres7
+ExecStart=/sbin/brctl stp fsctl on
+ExecStart=/sbin/ip link set fsctl up
+ExecStart=/sbin/ip addr add 172.16.0.254/24 dev fsctl
+
+
+ExecStop=/sbin/ip link set gres1 down
+ExecStop=/sbin/ip link set gres2 down
+ExecStop=/sbin/ip link set gres3 down
+ExecStop=/sbin/ip link set gres4 down
+ExecStop=/sbin/ip link set gres5 down
+ExecStop=/sbin/ip link set gres6 down
+ExecStop=/sbin/ip link set gres7 down
+ExecStop=/sbin/ip link set fsctl down
+ExecStop=/sbin/ip link del gres1
+ExecStop=/sbin/ip link del gres2
+ExecStop=/sbin/ip link del gres3
+ExecStop=/sbin/ip link del gres4
+ExecStop=/sbin/ip link del gres5
+ExecStop=/sbin/ip link del gres6
+ExecStop=/sbin/ip link del gres7
+ExecStop=/sbin/brctl delbr fsctl
+
+[Install]
+WantedBy=multi-user.target
