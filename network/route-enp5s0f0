@@ -8,6 +8,8 @@ default via 202.38.70.254 dev enp5s0f0 table ETH0
 
 #ipmi
 10.70.70.0/24 dev enp5s0f0
+
+#ustcnet
 202.38.64.0/19 via 202.38.70.254 dev enp5s0f0
 210.45.64.0/20 via 202.38.70.254 dev enp5s0f0
 210.45.112.0/20 via 202.38.70.254 dev enp5s0f0
